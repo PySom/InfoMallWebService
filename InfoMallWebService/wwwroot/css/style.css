@@ -2335,8 +2335,74 @@ h6.complaint {
         font-size: 14px;
     }
 }
+.graphik {
+    font-family: 'Graphik' !important;
+}
+
+.profile-padding {
+    padding-bottom: 1rem;
+}
+
+.infomallblue {
+    color: #4bc8fc;
+}
+
+@media(min-width:991px) and (max-width:768px) {
+}
+
+#mobile-banner {
+    width: 100%;
+    position: relative;
+    display: none;
+}
+
+    #mobile-banner > img {
+        width: inherit;
+    }
+
+@media(max-width:860px) {
+    #demo {
+        display: none;
+    }
+
+    #mobile-banner {
+        display: block;
+    }
+
+    h1.about-header {
+        font-size: 2rem;
+    }
+
+    h3.next-header {
+        font-size: 1.5rem;
+    }
+}
+
+#mobile-banner {
+    width: 100%;
+    position: relative;
+}
+
+    #mobile-banner > img {
+        width: inherit;
+    }
 
 
+
+@media(max-width:1024px) and (min-width:841px) {
+    .service-offered {
+        position: absolute;
+        bottom: 70%;
+        left: 8%;
+        color: white;
+    }
+}
+
+ul.clientele {
+    text-align: justify;
+}
+
+/*Chisom's styles*/
 /*Contact info button*/
 .contact_btn {
 	display: block;
@@ -2454,7 +2520,26 @@ strong{
 .padding-left-15 {
     padding-left: 15px !important;
 }
+/*Red colr for customer product*/
+.customer-product {
+    background-color: #d92517;
+    color: white;
+}
+.customer-product a{
+    border: 0.5px solid white;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 5px;
+}
+    .customer-product a:hover {
+        background-color: #69cffd;
+    }
 
+/*Enforcing police*/
+.navbar-brand img {
+    vertical-align: middle !important;
+    border-style: none !important;
+}
 /*Give image container 0 padding on mobile*/
 @media (max-width: 768px) {
     .mobile-adjust {
@@ -2465,8 +2550,8 @@ strong{
         margin-bottom: 0 !important;
     }
 }
-/*Copied from https://mdbootstrap.com/snippets/jquery/temp/322227?action=prism_export */
-.pink-textarea textarea.md-textarea:focus:not([readonly]) {
+    /*Copied from https://mdbootstrap.com/snippets/jquery/temp/322227?action=prism_export */
+    .pink-textarea textarea.md-textarea:focus:not([readonly]) {
     border-bottom: 1px solid #f48fb1;
     box-shadow: 0 1px 0 0 #f48fb1;
 }
@@ -2474,4 +2559,16 @@ strong{
 .active-pink-textarea.md-form label.active {
     color: #f48fb1;
 }
+/*Promo button*/
+.promo-button {
+    padding: 0.5rem !important;
+    background-color: #d92517;
+    border: 0.3px solid white !important;
+    border-radius: 5px !important;
+    color: white !important;
+}
 
+/*-ve margin top*/
+.negative-margin-top-5{
+    margin-top: -5px;
+}

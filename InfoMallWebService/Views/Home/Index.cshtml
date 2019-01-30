@@ -5,6 +5,7 @@
     List<BannerInformation> backGroundUrls = new List<BannerInformation>();
     List<ContentForTab> contents = new List<ContentForTab>();
     bool done = false;
+    int index = 0;
 }
 
 @if (Model != null)
@@ -38,36 +39,59 @@
     @if (backGroundUrls.Count() > 0)
     {
         <!-- banner slider-->
-        <div class="banner-silder">
-            <div id="JiSlider" class="jislider">
-                <ul>
-                    @foreach (var banner in backGroundUrls)
-                    {
-                        <li>
-                            <div style="background: url('../../@banner.ImageUrl.Replace('\\', '/')') no-repeat 0px 0px;background-size: cover;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;-moz-background-size: cover;">
-                                <div class="bs-slider-overlay">
-                                    <div class="container">
-                                        <!-- Slide Text Layer -->
-                                        <div class="w3l-slide-text">
-                                            <p class="aos-init aos-animate" data-aos="fade-down">@banner.Category.CategoryName</p>
-                                            <h3 data-animation="animated zoomInRight">@banner.BannerContent</h3>
-                                            @if (!string.IsNullOrEmpty(banner.ExtraInformation))
-                                            {
-                                                <a asp-action="Details" asp-controller="CategoryForTabs" asp-route-id="@banner.Category.CategoryId" class="button-style" data-animation="animated fadeInDown" data-aos="fade-down">
-                                                    @banner.ExtraInformation
-                                                </a>
-                                            }
+        <div class="container-fluid zero_padding">
+            <div id="mobile-banner">
+                <img src="~/@backGroundUrls.Take(1).SingleOrDefault().ImageUrl" alt="@backGroundUrls.Take(1).SingleOrDefault().ExtraInformation" class="img-responsive" />
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+            </div>
+            <div id="demo" class="carousel slide" data-ride="carousel">
+
+
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    @for (int k = 0; k < backGroundUrls.Count(); k++)
+                    {
+                        <li data-target="#demo" data-slide-to="@k" class="@(k == 0 ? "active" : "")"></li>
                     }
                 </ul>
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                    @foreach (var banner in backGroundUrls)
+                    {
+                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                            <img src="~/@banner.ImageUrl" class="img-responsive" alt="@banner.ExtraInformation">
+                            <div class="carousel-caption">
+                                <!-- Slide Text Layer -->
+                                <div class="w3l-slide-text">
+                                    <h3 data-animation="animated zoomInRight">@banner.BannerContent</h3>
+                                    @if (!string.IsNullOrEmpty(banner.ExtraInformation))
+                                    {
+                                        <a asp-action="Details" asp-controller="CategoryForTabs" asp-route-id="@banner.Category.CategoryId" class="button-style" data-animation="animated fadeInDown" data-aos="fade-down">
+                                            @banner.ExtraInformation
+                                        </a>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        index++;
+                    }
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
             </div>
+
+
         </div>
-        done = true;
+        <!-- //banner slider -->
+
     }
     //Using contents
     //First instance about us
@@ -125,37 +149,35 @@
 
     //Grabing Promotions
     var promotion = Model.TabCategories.SingleOrDefault(t => t.CategoryName.ToLower() == "promotions");
-                    
+
     if (promotion.Promotions != null)
     {
         <!--promo section-->
-        <!--promo section-->
         <div class="middle-agile-2 bg-infomallblue">
-            <div class="ppy-lg-3">
-                <div class="d-flex t-in">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5 no-padding-web">
-                        <h2 class="what-title text-dark my-3 bold">@promotion.Promotions.SingleOrDefault().PromotionName</h2>
+            <div class="container ppy-lg-3">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h2 class="what-title text-dark paddingtop4rem bold">@promotion.Promotions.SingleOrDefault().PromotionName</h2>
                         <p class="whats-text mb-4 text-white">
                             @promotion.Promotions.SingleOrDefault().PromotionDescription
                         </p>
-                        <a asp-action="Details" asp-controller="ContentForTabs" asp-route-id="@promotion.Promotions.SingleOrDefault().PromotionId" class="btn button-style-wthree mt-sm-5 mt-4">Get Started</a>
 
-                
+                        <a asp-action="Details" asp-controller="CategoryForTabs" asp-route-id="@promotion.Promotions.SingleOrDefault().CategoryForTabId" class="btn button-style-wthree mt-sm-5 mt-4">Get Started</a>
+
 
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-12 mobile-adjust"><img src="~/@promotion.Promotions.SingleOrDefault().ImagePath" alt="@promotion.Promotions.SingleOrDefault().PromotionName" class="img-fluid" /></div>
+                            <div class="col-12"><img src="~/@promotion.Promotions.SingleOrDefault().ImagePath" alt="@promotion.Promotions.SingleOrDefault().PromotionName" class="img-fluid" /></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- //end of promo section -->
-        <!-- //end of promo section -->
 
-        
+
+
     }
     var malls = Model.InfoCategories;
     List<ContentForMall> contentForMalls = new List<ContentForMall>();
@@ -212,6 +234,17 @@
         </div>
 
     }
+    <!-- subscribe -->
+    <div class="subscribe-info-w3l text-center py-5 customer-product">
+        <div class="container py-xl-5 py-lg-3">
+
+            <p class="mb-5 text-white">
+                We would be glad to spice up your tech.
+            </p>
+            <a asp-action="Create" asp-controller="CustomerProducts">Get in Touch</a>
+
+        </div>
+    </div>
 
 
 

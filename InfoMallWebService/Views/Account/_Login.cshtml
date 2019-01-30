@@ -1,0 +1,24 @@
+﻿@model InfoMallWebService.Models.AccountViewModels.LoginViewModel
+
+<form asp-action="Login" asp-controller="Account" class="login-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input asp-for="Email" placeholder="Email"/>
+    <span asp-validation-for="Email" class="text-danger"></span>
+    <input asp-for="Password" placeholder="Password"/>
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+        </label>
+    </div>
+    <button>login</button>
+    <p class="message">Not registered? <a href="#" class="service">Create an account</a></p>
+
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+}
