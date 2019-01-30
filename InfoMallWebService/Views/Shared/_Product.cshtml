@@ -1,0 +1,77 @@
+﻿@model InfoMallWebService.Models.CategoryForTab
+
+@inject IContentForTabRepository _content;
+
+@if (Model.ContentForTabs.Count() > 0)
+{
+
+    <!-- products -->
+    <div class="serives-agile py-5">
+        <div class="container py-xl-5 py-lg-3">
+            <div class="d-flex mt-4">
+                <div class="">
+                    <h1 class="about-header margintop4">InfoMall Nigeria</h1>
+                    <h3 class="next-header mt-4">Best Product in the world</h3>
+                </div>
+            </div>
+            <p>@Model.CategoryInformation</p>
+
+
+            <div class="d-flex no-margin-web row welcome-bottom text-center">
+                @foreach (var item in Model.ContentForTabs)
+                {
+                    <div class="text-align col-md-6 product-img no_padding5">
+                        <a asp-action="Details" asp-controller="ContentForTabs" asp-route-id="@item.ContentId">
+                            <img src="~/@item.ImagePath" alt="@item.Title" class="img-fluid" />
+                            <div class="product-name"><h3>@item.Title</h3></div>
+                            <div class="service-offered">@item.ShortDescription</div>
+                        </a>
+
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@{
+    //Grabing Promotions
+    var promotions = await _content.GetAllContents(false);
+    var promotion = promotions.Where(c => c.CategoryForTab.CategoryName.ToLower() == "promotions").SingleOrDefault();
+}
+@if (promotion != null)
+{
+    <!--Promo section-->
+    <div class="middle-agile-2 bg-infomallblue">
+        <div class="ppy-lg-3">
+            <div class="d-flex t-in">
+                <div class="col-md-1"></div>
+                <div class="col-md-5 no-padding-web">
+                    <h2 class="what-title text-dark my-3 bold">@promotion.Title</h2>
+                    <p class="whats-text mb-4 text-white">
+                        @promotion.ShortDescription
+                    </p>
+                    <a asp-action="Details" asp-controller="ContentForTabs" asp-route-id="@promotion.ContentId" class="btn button-style-wthree mt-sm-5 mt-4">Get Started</a>
+
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-12 mobile-adjust"><img src="~/@promotion.OldImage" alt="@promotion.Title" class="img-fluid" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //end of promo section -->
+
+    <!-- //end of promo section -->
+
+}
+
+
+
+

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<InfoMallWebService.Models.PromotionCustomer>
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    Layout = "~/Views/Manage/_Layout.cshtml";
+    ViewData["Title"] = "Details";
+    ViewData.AddActivePage(ManageNavPages.Details);
+    ViewData["Success"] = null;
+    string userId = null;
+    if (SignInManager.IsSignedIn(User))
+    {
+        ApplicationUser user = await UserManager.GetUserAsync(User);
+        userId = user.Id;
+    }
+}
+
+<div class="row">
+    <h2 class="col-md-12">Available Promotions</h2>
+    
+    @if (ViewBag.Success != null)
+    {
+        <p>@ViewBag.Success.ToString()</p>
+    }
+    <div class="col-md-6 font-size-12">
+        @foreach (var item in Model.Where(p => p.Customer.UserId == userId))
+        {
+            <div class="mt-4">
+                <span>@item.Promotion.PromotionName</span>
+                @if(item.HasPaid)
+                {
+                    <p>Expected Start Date: @item.ExpectedStartDate</p>
+                    <p>Expected Start Date: @item.ExpectedStartDate</p>
+                }
+                else
+                {
+                    <input type="button" class="btn btn-primary" value="Pay" />
+                }
+            </div>
+        }
+        
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿@model InfoMallWebService.Models.CategoryForTab
+
+@{
+	ViewData["Title"] = Model.CategoryName;
+}
+
+@switch (Model.CategoryName.ToLower())
+{
+	case "about us":
+		<Partial name="~/Views/Shared/_AboutUs.cshtml" model="Model" />
+		break;
+	case "products":
+		<Partial name="~/Views/Shared/_Product.cshtml" model="Model" />
+		break;
+	case "services":
+		<Partial name="~/Views/Shared/_Services.cshtml" model="Model" />
+		break;
+	case "promotions":
+		<Partial name="~/Views/Shared/_Promotions.cshtml" model="Model" />
+		break;
+}

@@ -1,0 +1,61 @@
+﻿@model InfoMallWebService.Models.CategoryForTab
+
+
+<div class="mt-8"></div>
+@foreach (var about in Model.ContentForTabs.Take(1))
+{
+    <!-- banner bottom -->
+    <div class="middle-agile-3">
+        <div class="container">
+            <div class="d-flex mt-4">
+                <div>
+                    <h1 class="about-header margintop4">About Us</h1>
+                    <h3 class="next-header mt-4">@Model.ContentForTabs.ElementAt(0).Title</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 about-info-sec py-5">
+                    <div class="py-xl-4 py-sm-3 py-2 no_paddingtop">
+                        <p class="whats-text text-justify">
+                            @Html.Raw(Model.ContentForTabs.ElementAt(0).LongDescription)
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6"><img src="~/@Model.ContentForTabs.ElementAt(0).ImagePath" alt="@Model.ContentForTabs.ElementAt(0).Title" class="img-fluid" /></div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+    <div class="subscribe-info-w3l">
+        <div class="container py-lg-3 paddingbottomhalf">
+
+            <h3 class="next-header">Company Profile</h3>
+
+        </div>
+    </div>
+    <div class="middle-agile-3 no_margintop">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6"><img src="~/@Model.ContentForTabs.Skip(1).Take(1).SingleOrDefault().ImagePath" alt="@Model.ContentForTabs.Skip(1).Take(1).SingleOrDefault().Title" class="img-fluid" /></div>
+            <div class="col-md-6 about-info-sec ">
+                <div class="py-xl-4 py-sm-3 py-2">
+                    <p class="whats-text mb-4 text-justify">@Model.ContentForTabs.Where(c => c.Title.ToLower() == "company profile").SingleOrDefault().LongDescription</p>
+                    @foreach (var item in Model.ContentForTabs.Skip(1))
+                    {
+                        if (item.Title.ToLower() != "company profile")
+                        {
+                            <h3 class="what-title text-dark">@item.Title</h3>
+                            <p class="whats-text mb-4 text-justify padding-right-15">@item.LongDescription</p>
+                        }
+                    }
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+

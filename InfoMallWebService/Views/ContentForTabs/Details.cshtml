@@ -1,0 +1,46 @@
+﻿@model InfoMallWebService.Dtos.ContentForTabDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+
+
+<!-- services -->
+<div class="serives-agile py-5">
+    <div class="container py-xl-5 py-lg-3">
+        <div>
+            <h1 class="about-header margintop4">@Model.Title</h1>
+            <h3 class="next-header mt-4">@Model.ContentImages.ElementAt(0).ExtraData</h3>
+            
+        </div>
+        <div class="d-flex welcome-bottom text-center">
+            <div class="text-align col-md-12 no-padding-web">
+                <img src="~/@Model.ContentImages.ElementAt(0).CarImagePath" alt="@Model.Title" class="img-fluid full-width"/>
+            </div>
+
+        </div>
+        <div class="d-flex welcome-bottom">
+            <h3 class="next-header mt-4">@Model.ContentImages.ElementAt(0).Description</h3>
+
+        </div>
+        <div class="col-md-12">
+            @foreach(var item in Model.ContentImages.Skip(1))
+            {
+                <div class="col-md-6 mt-4">
+                    <div class="welcome-grid">
+                        <img src="~/@item.CarImagePath" alt="@item.Description" class="img-fluid" />
+                        <h4 class="my-3">@(!string.IsNullOrEmpty(item.ExtraData) ? item.ExtraData : "Design")</h4>
+                        <p>@item.Description</p>
+                    </div>
+
+                </div>
+            }
+            
+         
+        </div>
+
+
+    </div>
+</div>
+<!-- services -->

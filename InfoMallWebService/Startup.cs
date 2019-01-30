@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InfoMallWebService.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using InfoMallWebService.Models;
+using InfoMallWebService.Repository;
+using InfoMallWebService.Services;
 
 namespace InfoMallWebService
 {
@@ -23,7 +21,7 @@ namespace InfoMallWebService
 			Configuration = configuration;
 		}
 
-		public IConfiguration Configuration { get; }
+		public static IConfiguration Configuration { get; private set; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
@@ -38,9 +36,29 @@ namespace InfoMallWebService
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDefaultIdentity<IdentityUser>()
+			services.AddIdentity<ApplicationUser, IdentityRole>()
 				.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddEntityFrameworkStores<ApplicationDbContext>();
+
+			//services for repositories
+			services.AddTransient<IBannerRepository, BannerInfoRepository>();
+			services.AddTransient<ICategoryForInfoRepository, CategoryForInfoRepository>();
+			services.AddTransient<ICategoryForTabRepository, CategoryForTabRepository>();
+			services.AddTransient<IClienteleRepository, ClienteleRepository>();
+			services.AddTransient<IContactInfoRepository, ContactInfoRepository>();
+			services.AddTransient<IContentForMallRepository, ContentForMallRepository>();
+			services.AddTransient<IContentForTabRepository, ContentForTabRepository>();
+			services.AddTransient<IContentImageRepository, ContentImageRepository>();
+			services.AddTransient<ICustomerProductRepository, CustomerProductRepository>();
+			services.AddTransient<ICustomerRepository, CustomerRepository>();
+			services.AddTransient<IPromotionCustomerRepository, PromotionCustomerRepository>();
+			services.AddTransient<IPromotionInfoRepository, PromotionInfoRepository>();
+			services.AddTransient<IPromotionRepository, PromotionRepository>();
+
+			//Services for email and images
+			services.AddTransient<IEmailSender, EmailSender>();
+			services.AddTransient<IImageService, ImageService>();
+
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 		}

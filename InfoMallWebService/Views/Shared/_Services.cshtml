@@ -1,0 +1,33 @@
+﻿@model InfoMallWebService.Models.CategoryForTab
+
+
+@if (Model.ContentForTabs.Count() > 0)
+{
+    <div class="serives-agile py-5">
+        <div class="container py-xl-5 py-lg-3">
+            <div class="d-flex mt-4">
+                <div class="">
+                    <h1 class="about-header margintop4">Our Services</h1>
+                    <h3 class="next-header mt-4">When you say top-notch, you know it</h3>
+                </div>
+            </div>
+            <p>@Model.CategoryInformation</p>
+
+            <div class="row">
+                @foreach (var item in Model.ContentForTabs)
+                {
+                    <div class="col-md-6 mt-4">
+                        <div class="welcome-grid zero_padding no-margin-left no-margin-right" id="service_main">
+                            <img src="~/@item.ImagePath" alt="@item.Title" class="full-width img-fluid" />
+                            <h4 class="my-3">@item.Title</h4>
+                            <p class="service_desc">
+                                @item.LongDescription
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+}

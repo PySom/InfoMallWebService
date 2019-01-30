@@ -1,0 +1,140 @@
+﻿@model InfoMallWebService.Dtos.ContentForMallDto
+
+
+@inject ICategoryForInfoRepository Categories
+
+@{
+    ViewData["Title"] = "Details";
+    List<ContentForMall> contentsTrending = new List<ContentForMall>();
+    List<ContentForMall> contentsRecent = new List<ContentForMall>();
+    var cats = await Categories.GetAllCategories(true);
+    var otherContents = await Categories.GetCategoryById(Model.CategoryId, true);
+}
+
+
+
+<!-- single -->
+<section class="banner-bottom py-5">
+    <div class="container py-xl-5 py-lg-3">
+        <div class="inner-sec">
+
+            <h3 class="tittle text-center text-uppercase text-dark font-weight-bold mb-sm-5 mb-4">Information Mall</h3>
+            <div class="row">
+                <!-- left side -->
+                <div class="col-lg-8 left-blog-info text-left no-padding-left-blog">
+                    <div class="blog-grid-top">
+                        <h2 class="col-md-12 blog-h-font mb-3">@Model.Title</h2>
+                        <div class="b-grid-top">
+                            <div class="blog_info_left_grid padding-left-15">
+                                <img src="~/@Model.OldImage" alt="@Model.Title" class="img-fluid" />
+                            </div>
+                        </div>
+
+                        <h3 class="padding-left-15">
+                            @Model.ShortDescription
+                        </h3>
+                        <div class="col-md-12">
+                            @Html.Raw(Model.LongDescription)
+                        </div>
+                    </div>
+                    
+                    @foreach (var content in otherContents.ContentsForInformation)
+                    {
+                        if (content.CategoryForInformationId == Model.CategoryId && content.NumberOfViews > 2)
+                        {
+                            contentsTrending.Add(content);
+                        }
+                        if (content.CategoryForInformationId == Model.CategoryId && DateTime.Now - content.DatePosted <= TimeSpan.FromDays(2))
+                        {
+                            contentsRecent.Add(content);
+                        }
+
+                    }
+
+                </div>
+                <!-- //left side -->
+                <!-- right side -->
+                <aside class="col-lg-4 right-blog-con text-right">
+                    <div class="right-blog-info text-left">
+
+                        <div class="tech-btm">
+                            <h4>Categories</h4>
+                            <ul class="list-group single">
+                                @foreach (var category in cats)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <a asp-action="Details" asp-controller="CategoryForInfos" asp-route-id="@category.CategoryId">@category.CategoryName</a>
+                                        <span class="badge badge-primary badge-pill">@category.ContentsForInformation.Count().ToString()</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="tech-btm">
+                            <h4>Top stories of the week</h4>
+                            @foreach (var content in contentsTrending)
+                            {
+                                <div class="blog-grids row mb-3">
+                                    <div class="col-md-5 blog-grid-left">
+                                        <a asp-action="Details" asp-controller="ContentForMalls" asp-route-id="@content.ContentId" class="text-danger">
+                                            <img src="~/@content.ImagePath" class="img-fluid rounded" alt="@content.ImagePath">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-7 blog-grid-right">
+                                        <h5>
+                                            <a asp-action="Details" asp-controller="ContentForMalls" asp-route-id="@content.ContentId" class="text-danger">
+                                                @content.ShortDescription
+                                            </a>
+
+                                        </h5>
+                                        <div class="sub-meta">
+                                            <span>
+                                                <i class="far fa-clock"></i> @content.DatePosted.ToLongDateString()
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+
+
+                        </div>
+
+                        <div class="single-gd tech-btm">
+                            <h4>Recent Post</h4>
+                            <div class="blog-grids">
+                                @foreach (var content in contentsRecent)
+                                {
+                                    <div class="blog-grids row mb-3">
+                                        <div class="col-md-5 blog-grid-left">
+                                            <a asp-action="Details" asp-controller="ContentForMalls" asp-route-id="@content.ContentId" class="text-danger">
+                                                <img src="~/@content.ImagePath" class="img-fluid rounded" alt="@content.ImagePath">
+                                            </a>
+                                        </div>
+                                        <div class="col-md-7 blog-grid-right">
+                                            <h5>
+                                                <a asp-action="Details" asp-controller="ContentForMalls" asp-route-id="@content.ContentId" class="text-danger">
+                                                    @content.ShortDescription
+                                                </a>
+
+                                            </h5>
+                                            <div class="sub-meta">
+                                                <span>
+                                                    <i class="far fa-clock"></i> @content.DatePosted.ToShortDateString()
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                                <div class="clearfix"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!-- //right side -->
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- //single -->

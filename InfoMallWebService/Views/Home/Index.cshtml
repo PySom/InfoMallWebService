@@ -1,8 +1,240 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model InfoMallWebService.Dtos.HomePageDto
+
+@{
+    ViewData["Title"] = "InfoMall Nigeria Limited. Purpose Beyond Service!";
+    List<BannerInformation> backGroundUrls = new List<BannerInformation>();
+    List<ContentForTab> contents = new List<ContentForTab>();
+    bool done = false;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model != null)
+{
+    @if (Model.TabCategories.Count() > 0)
+    {
+        foreach (var category in Model.TabCategories)
+        {
+            if (category.Banners.Where(b => b.ShowBannerOnHome).Count() > 0)
+            {
+                //Grabing all banners
+                @foreach (var banner in category.Banners.Where(b => b.ShowBannerOnHome))
+                {
+                    backGroundUrls.Add(banner);
+                }
+
+            }
+            if (category.ContentForTabs.Where(c => c.ShowOnHome).Count() > 0)
+            {
+                @foreach (var content in category.ContentForTabs.Where(c => c.ShowOnHome))
+                {
+                    contents.Add(content);
+                }
+            }
+
+
+
+        }
+    }
+    //Using grabbed banners
+    @if (backGroundUrls.Count() > 0)
+    {
+        <!-- banner slider-->
+        <div class="banner-silder">
+            <div id="JiSlider" class="jislider">
+                <ul>
+                    @foreach (var banner in backGroundUrls)
+                    {
+                        <li>
+                            <div style="background: url('../../@banner.ImageUrl.Replace('\\', '/')') no-repeat 0px 0px;background-size: cover;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;-moz-background-size: cover;">
+                                <div class="bs-slider-overlay">
+                                    <div class="container">
+                                        <!-- Slide Text Layer -->
+                                        <div class="w3l-slide-text">
+                                            <p class="aos-init aos-animate" data-aos="fade-down">@banner.Category.CategoryName</p>
+                                            <h3 data-animation="animated zoomInRight">@banner.BannerContent</h3>
+                                            @if (!string.IsNullOrEmpty(banner.ExtraInformation))
+                                            {
+                                                <a asp-action="Details" asp-controller="CategoryForTabs" asp-route-id="@banner.Category.CategoryId" class="button-style" data-animation="animated fadeInDown" data-aos="fade-down">
+                                                    @banner.ExtraInformation
+                                                </a>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        done = true;
+    }
+    //Using contents
+    //First instance about us
+    var aboutUs = contents.Where(c => c.Category.CategoryName.ToLower() == "about us" && c.Title.ToLower() == "our goal").SingleOrDefault();
+    if (aboutUs != null)
+    {
+        <!-- banner bottom -->
+        <div class="services-agile-2 py-5">
+            <div class=" py-xl-5 py-lg-3">
+                <div class="d-flex t-in">
+                    <div class="col-lg-5 text-info-sec p-0">
+                        <img src="~/@aboutUs.ImagePath" alt="@aboutUs.Title" class="img-fluid" />
+                    </div>
+                    <div class="col-lg-7 text-info-sec bg-light bg-none">
+                        <h5 class="what-title text-dark my-3">@aboutUs.Title</h5>
+                        <p class="whats-text mb-4">
+                            @aboutUs.ShortDescription
+                        </p>
+                        <a asp-action="Details" asp-controller="CategoryForTabs" asp-route-id="@aboutUs.CategoryForTabId" class="button-style" data-animation="animated fadeInDown" data-aos="fade-down">
+                            Show More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //banner bottom -->
+    }
+
+    //Grabbing services from content
+    var products = contents.Where(c => c.Category.CategoryName.ToLower() == "products");
+    @if (products != null)
+    {
+        <div class="services text-center pb-5" id="services">
+            <div class="container no-padding-web pb-xl-5 pb-lg-3">
+                @{ int catId = 0;}
+                <h5 class="tittle text-center text-uppercase text-dark font-weight-bold mb-sm-5 mb-4">Meanwhile, here is a list of some of our works</h5>
+                <div class="row box2">
+                    @foreach (var product in products.Take(4))
+                    {
+                        catId = product.CategoryForTabId;
+                        <div class="col-md-6 s-1 home-effect">
+                            <a asp-action="Details" asp-controller="ContentForTabs" asp-route-id="@product.ContentId">
+                                <img src="~/@product.ImagePath" alt="@product.Title" class="img-fluid" />
+                                <div class="product-name"><h3>@product.Title</h3> </div>
+                                <div class="service-offered">@product.ShortDescription</div>
+                            </a>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+
+    //Grabing Promotions
+    var promotion = Model.TabCategories.SingleOrDefault(t => t.CategoryName.ToLower() == "promotions");
+                    
+    if (promotion.Promotions != null)
+    {
+        <!--promo section-->
+        <!--promo section-->
+        <div class="middle-agile-2 bg-infomallblue">
+            <div class="ppy-lg-3">
+                <div class="d-flex t-in">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 no-padding-web">
+                        <h2 class="what-title text-dark my-3 bold">@promotion.Promotions.SingleOrDefault().PromotionName</h2>
+                        <p class="whats-text mb-4 text-white">
+                            @promotion.Promotions.SingleOrDefault().PromotionDescription
+                        </p>
+                        <a asp-action="Details" asp-controller="ContentForTabs" asp-route-id="@promotion.Promotions.SingleOrDefault().PromotionId" class="btn button-style-wthree mt-sm-5 mt-4">Get Started</a>
+
+                
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-12 mobile-adjust"><img src="~/@promotion.Promotions.SingleOrDefault().ImagePath" alt="@promotion.Promotions.SingleOrDefault().PromotionName" class="img-fluid" /></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //end of promo section -->
+        <!-- //end of promo section -->
+
+        
+    }
+    var malls = Model.InfoCategories;
+    List<ContentForMall> contentForMalls = new List<ContentForMall>();
+    foreach (var mall in malls)
+    {
+        if (mall.ContentsForInformation.Where(c => c.ShowOnHome) != null && mall.ContentsForInformation.Where(c => c.ShowOnHome).Count() > 0)
+        {
+            foreach (var info in mall.ContentsForInformation.Where(c => c.ShowOnHome))
+            {
+                contentForMalls.Add(info);
+            }
+        }
+
+    }
+    if (contentForMalls.Count > 0)
+    {
+        <div class=" py-5">
+            <div class="container py-xl-5 py-lg-3">
+                <div class="row">
+                    @foreach (var info in contentForMalls.Take(3))
+                    {
+                        <div class="col-md-4">
+                            <div class="blog-section">
+                                <img src="~/@info.ImagePath" alt="@info.Title" class="img-fluid" />
+                                <h4>@info.Title</h4>
+                                <div class="small-section">
+                                    <p>@info.DatePosted</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+    }
+    //Grabbing clientele
+    @if (Model.Clienteles.Count() > 0)
+    {
+        <div class=" py-5">
+            <div class="container py-xl-5 py-lg-3">
+                <ul class="clientele">
+                    @foreach (var clientele in Model.Clienteles)
+                    {
+                        <li>
+                            <div class="flicker_grid-agile">
+                                <img src="~/@clientele.OldImage" alt=" " class="img-fluid" />
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+    }
+
+
+
+}
+
+
+
+@if (done)
+{
+    @section Scripts{
+        <!--banner-slider-->
+        <script src="~/js/JiSlider.js"></script>
+        <script>
+            $(window).load(function () {
+                $('#JiSlider').JiSlider({
+                    color: '#fff',
+                    start: 3,
+                    reverse: true
+                }).addClass('ff')
+            })
+        </script>
+        <!-- //banner-slider -->
+    }
+
+}
+

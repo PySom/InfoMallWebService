@@ -1,0 +1,100 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model InfoMallWebService.Models.CategoryForTab
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    string userId = null;
+    int i = 1;
+    if (SignInManager.IsSignedIn(User))
+    {
+
+        ApplicationUser user = await UserManager.GetUserAsync(User);
+        userId = user.Id;
+    }
+}
+
+
+
+@if (Model.Promotions != null)
+{
+    <div class="serives-agile py-5">
+        <div class="container py-xl-5 py-lg-3">
+            <div class="">
+                <h1 class="about-header margintop4">@Model.Promotions.FirstOrDefault().PromotionName</h1>
+                <h3 class="next-header mt-4">@Model.Promotions.FirstOrDefault().PromotionExtra</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-4">
+                    <p>@Model.Promotions.FirstOrDefault().PromotionDescription</p>
+
+                </div>
+                <div class="col-md-6 mt-4">
+                    <a href="#">
+                        <div class=" no_margintop">
+                            <img src="~/@Model.Promotions.FirstOrDefault().ImagePath" alt="@Model.Promotions.FirstOrDefault().PromotionName" class="img-fluid" />
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="main col-md-12">
+                    
+                    <div class="padding-w3l">
+                        <h1>Golden Price Table</h1>
+                        <div class="content">
+
+
+                            @foreach (var item in Model.Promotions.FirstOrDefault().PromotionsInformation)
+                            {
+                                <div class="@($"grid{i}")">
+                                    @Html.Raw(item.PromotionInformationContent)
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <div class="submit">
+                                            <form asp-action="Create" asp-controller="PromotionCustomers">
+                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                <input type="hidden" name="UserId" value="@userId" />
+                                                <input type="hidden" name="PromotionId" value="@item.PromotionId" />
+                                                <input type="hidden" name="CustomersWant" value='@($"{Model.Promotions.FirstOrDefault().PromotionName} {item.Title}")' />
+                                                <input type="submit" value="Subscribe" class="sign-up popup-with-zoom-anim" />
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="submit">
+                                            <a class=" sign-up popup-with-zoom-anim" asp-action="Login" asp-controller="Account" asp-route-returnUrl="@Url.Action("Details", "CategoryForTabs", new { id = Model.CategoryId })">Sign Up</a>
+                                        </div>
+                                    }
+
+                                </div>
+                                i++;
+                            }
+                            <div class="clear"> </div>
+                        </div>
+
+
+
+                    </div>
+                    
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+}
+
+
+<!-- services -->

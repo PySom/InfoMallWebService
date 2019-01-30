@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model InfoMallWebService.Models.ContactInformation
+
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Contact";
+    string userId = null;
+    if (SignInManager.IsSignedIn(User))
+    {
+        ApplicationUser user = await UserManager.GetUserAsync(User);
+        userId = user.Id;
+    }
+}
+
+<!-- //contact info -->
+<div class="container-fluid margintop4">
+    <div class="row">
+        <div class="col-md-12 main_grid_contact bg-light">
+            <div class="form form_contact">
+                
+                <form asp-action="ContactConfirmed">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="UserId" value="@userId" />
+                    <h6 class="complaint complaint-on-web">Feedback/Complaint</h6>
+                    <label class="switch">
+                        <input onclick="swap()" id="toggle" asp-for="ContactType">
+                        <span class="slider round"></span>
+                    </label>
+
+                    <h4 id="send_us" class="text-center text-uppercase text-dark font-weight-bold mb-sm-5 mb-4">Send us a Complaint</h4>
+                    <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                        <textarea asp-for="Message" type="text" class="md-textarea form-control" rows="6" placeholder="Please write to us"></textarea>
+                    </div>
+                    @*<div class="form-group">
+            <label class="mb-2" asp-for="Message"></label>
+            <textarea asp-for="Message" placeholder="Please send us a message..."></textarea>
+        </div>*@
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="input-group1">
+                            <input type="submit" value="Create" class="form-control" />
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-action="Login" asp-controller="Account" asp-route-returnUrl='@Url.Action("Contact", "Home")' class="btn btn-primary">Send</a>
+                    }
+
+
+                </form>
+                <p id="success"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //contact -->
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function SuccessMessage() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("success").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "success.txt", true);
+            xhttp.send();
+        }
+    </script>
+
+
+    <!-- Js files -->
+    <!-- JavaScript -->
+    <script>
+        var message = document.getElementById("send_us")
+        complaint = false;
+        var toggle = document.getElementById('toggle');
+        function swap() {
+            if (toggle.checked == true) {
+                console.log(toggle.checked)
+                complaint = true;
+            }
+            else if (toggle.checked == false) {
+                console.log(toggle.checked)
+                complaint = false;
+            }
+            if (!complaint) {
+                message.innerText = "Send a Feedback";
+            }
+            else {
+                message.innerText = "Send a Complaint";
+            }
+        }
+
+
+    </script>
+    <!-- Default-JavaScript-File -->
+}
